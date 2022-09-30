@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addCart } from "../redux/action";
+import { addCart, delCart } from "../redux/action";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 
+
+
 export default function Product() {
+  const [cartBtn, setCartBtn]=useState("Add To Cart")
   const { id } = useParams();
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
+
   const addProduct = (product) => {
-    dispatch(addCart(product));
+    if(cartBtn==="Add To Cart"){
+      dispatch(addCart(product))
+      setCartBtn("Remove Item")
+    }else{
+      dispatch(delCart(product))
+      setCartBtn("Add To Cart")
+    }
+    
   };
 
   useEffect(() => {
@@ -66,7 +77,7 @@ export default function Product() {
             className="btn btn-outline-primary px-4 py-2"
             onClick={() => addProduct(product)}
           >
-            Add to Cart
+            {cartBtn}
           </button>
           <Link to="/cart" className="btn btn-primary ms-2 px-3 py-2">
             Go to Cart
